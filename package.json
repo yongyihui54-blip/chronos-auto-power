@@ -1,0 +1,80 @@
+{
+  "name": "chronos-power-scheduler",
+  "version": "0.1.0",
+  "description": "电脑定时开关机桌面端 APP",
+  "main": "dist-electron/main.js",
+  "author": "Chronos",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "dev:browser": "vite",
+    "electron:dev": "set ELECTRON=true&& vite",
+    "build": "tsc && set ELECTRON=true&& set ELECTRON_BUILDER_CACHE=.electron-builder-cache&& set ELECTRON_BUILDER_BINARIES_MIRROR=https://npmmirror.com/mirrors/electron-builder-binaries/&& vite build && electron-builder --win nsis",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.3.19",
+    "lucide-react": "^0.427.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.15",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.9",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vite-plugin-electron": "^0.28.7",
+    "vite-plugin-electron-renderer": "^0.14.6"
+  },
+  "build": {
+    "appId": "com.chronos.scheduler",
+    "productName": "Chronos",
+    "directories": {
+      "output": "release"
+    },
+    "electronDist": "node_modules/electron/dist",
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Chronos",
+      "include": "build/installer.nsh"
+    },
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "build/tray.png"
+    ],
+    "extraResources": [
+      {
+        "from": "build/tray.png",
+        "to": "build/tray.png"
+      }
+    ]
+  }
+}

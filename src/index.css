@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   设计令牌 —— 双主题，由 CSS 变量驱动
+   主题：时间与轨道。深色=夜空机芯，浅色=晨光表盘
+   ========================================================= */
+@layer base {
+  :root {
+    /* 浅色：晨光渐变底 */
+    --bg-0: #e6ecff;
+    --bg-1: #f5e9ff;
+    --bg-2: #ffe9f4;
+    --bg-3: #e8fbff;
+
+    /* 文字 */
+    --ink: 30 41 59; /* #1E293B */
+    --ink-soft: 100 116 139; /* slate-500 */
+    --ink-faint: 148 163 184; /* slate-400 */
+
+    /* 玻璃 */
+    --glass: 255 255 255; /* 卡片底色基 */
+    --glass-alpha: 0.55;
+    --glass-border: 255 255 255;
+    --glass-border-alpha: 0.7;
+
+    /* 强调（靛蓝→紫罗兰，签名渐变） */
+    --accent: 99 102 241; /* #6366F1 indigo-500 */
+    --accent-2: 139 92 246; /* #8B5CF6 violet-500 */
+    --accent-soft: 129 140 248;
+
+    /* 时间环描边 */
+    --ring-stroke: 79 70 229;
+    --ring-stroke-alpha: 0.12;
+
+    /* 轨迹/分隔 */
+    --hairline: 15 23 42;
+    --hairline-alpha: 0.08;
+
+    color-scheme: light;
+  }
+
+  .dark {
+    /* 深色：夜空机芯 */
+    --bg-0: #0b1020;
+    --bg-1: #15123a;
+    --bg-2: #2a1255;
+    --bg-3: #0a1a2f;
+
+    --ink: 241 245 249; /* #F1F5F9 */
+    --ink-soft: 148 163 184;
+    --ink-faint: 100 116 139;
+
+    --glass: 30 41 59;
+    --glass-alpha: 0.45;
+    --glass-border: 148 163 184;
+    --glass-border-alpha: 0.18;
+
+    --accent: 129 140 248; /* indigo-400 提亮 */
+    --accent-2: 167 139 250; /* violet-400 */
+    --accent-soft: 165 180 252;
+
+    --ring-stroke: 129 140 248;
+    --ring-stroke-alpha: 0.16;
+
+    --hairline: 226 232 240;
+    --hairline-alpha: 0.1;
+
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  * {
+    border-color: rgb(var(--hairline) / var(--hairline-alpha));
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    margin: 0;
+    font-family: theme('fontFamily.sans');
+    color: rgb(var(--ink));
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    user-select: none;
+    /* 主题切换时颜色平滑过渡 */
+    transition: background-color 0.4s ease, color 0.3s ease;
+  }
+
+  /* 数字 / 时间使用几何感更强的 Space Grotesk，等宽避免跳动 */
+  .tabular {
+    font-family: theme('fontFamily.display');
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* =========================================================
+   玻璃拟态工具类
+   ========================================================= */
+@layer components {
+  /* 玻璃卡片：半透明 + 模糊 + 高光描边 */
+  .glass {
+    background: rgb(var(--glass) / var(--glass-alpha));
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgb(var(--glass-border) / var(--glass-border-alpha));
+  }
+
+  /* 玻璃表面上的内层容器，更柔和 */
+  .glass-soft {
+    background: rgb(var(--glass) / calc(var(--glass-alpha) * 0.5));
+    border: 1px solid rgb(var(--glass-border) / calc(var(--glass-border-alpha) * 0.6));
+  }
+
+  /* 签名渐变文字 */
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      rgb(var(--accent)) 0%,
+      rgb(var(--accent-2)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 签名渐变按钮底 */
+  .bg-gradient-accent {
+    background-image: linear-gradient(
+      120deg,
+      rgb(var(--accent)) 0%,
+      rgb(var(--accent-2)) 100%
+    );
+  }
+}
+
+@layer utilities {
+  /* 拖拽区（自定义标题栏用） */
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+
+  /* 滚动条隐藏 */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  /* 文本可选中（用于输入框等） */
+  .selectable {
+    user-select: text;
+  }
+}
+
+/* 尊重减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
